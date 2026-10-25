@@ -6,7 +6,7 @@ on:
       - "win7/**"
       - ".github/workflows/build-win7.yml"
   workflow_dispatch:
-666
+
 env:
   CSC_IDENTITY_AUTO_DISCOVERY: "false"
 
