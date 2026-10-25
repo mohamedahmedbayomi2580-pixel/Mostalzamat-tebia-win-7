@@ -1,0 +1,47 @@
+{
+  "name": "cashier-win7",
+  "productName": "Cashier",
+  "version": "1.0.0",
+  "description": "Cashier POS",
+  "author": "Cashier",
+  "main": "main.js",
+  "scripts": {
+    "start": "electron .",
+    "build": "electron-builder --win --x64 --ia32 --publish never"
+  },
+  "optionalDependencies": {
+    "better-sqlite3": "9.6.0"
+  },
+  "devDependencies": {
+    "electron": "22.3.27",
+    "electron-builder": "^24.13.3"
+  },
+  "build": {
+    "appId": "com.mycashier.win7",
+    "productName": "Cashier",
+    "files": [
+      "main.js",
+      "preload.js",
+      "db.js",
+      "backup.js",
+      "www/**/*"
+    ],
+    "asarUnpack": [
+      "**/node_modules/better-sqlite3/**"
+    ],
+    "win": {
+      "target": [
+        "nsis",
+        "portable"
+      ]
+    },
+    "nsis": {
+      "oneClick": false,
+      "allowToChangeInstallationDirectory": true,
+      "artifactName": "Cashier-Win7-Setup-${arch}.${ext}"
+    },
+    "portable": {
+      "artifactName": "Cashier-Win7-Portable-${arch}.${ext}"
+    }
+  }
+}
