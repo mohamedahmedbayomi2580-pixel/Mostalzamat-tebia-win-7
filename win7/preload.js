@@ -2,6 +2,7 @@ const { contextBridge, ipcRenderer } = require('electron');
 
 contextBridge.exposeInMainWorld('sqlAPI', {
   mode: () => ipcRenderer.invoke('db:mode'),
+  info: () => ipcRenderer.invoke('db:info'),
   load: () => ipcRenderer.invoke('db:load'),
   apply: (ops) => ipcRenderer.invoke('db:apply', ops),
   getDir: () => ipcRenderer.invoke('bk:get'),
