@@ -4,16 +4,18 @@ const path = require('path');
 const { app, ipcMain } = require('electron');
 
 const TB = ['p', 'c', 'i', 'r', 'h', 'kv'];
-let mode = 'file', db = null, mem = {}, file = '';
+let mode = 'file', db = null, mem = {}, file = '', dbpath = '', ver = '';
 
 function init() {
   const dir = app.getPath('userData');
   fs.mkdirSync(dir, { recursive: true });
   try {
     const D = require('better-sqlite3');
-    db = new D(path.join(dir, 'cashier.db'));
+    dbpath = path.join(dir, 'cashier.db');
+    db = new D(dbpath);
     db.pragma('journal_mode = WAL');
     TB.forEach(t => db.exec(`CREATE TABLE IF NOT EXISTS ${t}(k ${t === 'kv' ? 'TEXT' : 'INTEGER'} PRIMARY KEY, j TEXT NOT NULL)`));
+    ver = db.prepare('select sqlite_version() as v').get().v;
     mode = 'sqlite';
   } catch (e) {
     mode = 'file';
@@ -24,6 +26,13 @@ function init() {
 }
 
 ipcMain.handle('db:mode', () => mode);
+
+ipcMain.handle('db:info', () => {
+  const p = mode === 'sqlite' ? dbpath : file;
+  let size = 0;
+  try { size = fs.statSync(p).size; } catch (e) {}
+  return { mode, ver, path: p, size };
+});
 
 ipcMain.handle('db:load', () => {
   const o = {};
